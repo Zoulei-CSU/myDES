@@ -1,0 +1,10 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.generator": "MinGW Makefiles",
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
+	"cmake.debugConfig": {
+        "miDebuggerPath": "gdb.exe",
+        "externalConsole": true,
+        "stopAtEntry": false
+    }
+}
