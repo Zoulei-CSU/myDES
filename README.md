@@ -3,18 +3,16 @@
 
 
 # 使用方法
-`
-Usage: myDES -e/-d key [input-file] [output-file] [-s]<br/>
-         The key must be 8 bits.<br/>
-         -e: Encryption         -d: Decryption.<br/>
+```Shell
+Usage: myDES -e/-d key [input-file] [output-file] [-s]
+         The key must be 8 bits.
+         -e: Encryption         -d: Decryption
          -s: Keep quiet and do not output any information.
-`  
-
-`
-Example: myDES -e ABCDEFGH input.txt output.txt.des -s<br/>
+```
+```Shell
+Example: myDES -e ABCDEFGH input.txt output.txt.des -s  
          myDES -d ABCDEFGH output.txt.des output.txt
-`
-
+```
 
 # 加密文件结构的说明
 1.加密后的文件，开头8个字节是miagc字节，固定为下面的值。可以用这8个字节判断是不是需要的加密文件。
