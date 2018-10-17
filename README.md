@@ -4,14 +4,14 @@
 
 # 使用方法
 `
-Usage: myDES -e/-d key [input-file] [output-file] [-s]
-         The key must be 8 bits.
-         -e: Encryption         -d: Decryption.
+Usage: myDES -e/-d key [input-file] [output-file] [-s]<br/>
+         The key must be 8 bits.<br/>
+         -e: Encryption         -d: Decryption.<br/>
          -s: Keep quiet and do not output any information.
 `  
 
 `
-Example: myDES -e ABCDEFGH input.txt output.txt.des -s
+Example: myDES -e ABCDEFGH input.txt output.txt.des -s<br/>
          myDES -d ABCDEFGH output.txt.des output.txt
 `
 
