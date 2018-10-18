@@ -131,57 +131,98 @@ void usage()
     cout << "\t myDES -d ABCDEFGH output.txt.des output.txt" << endl;
 }
 
+#ifndef EXPORT_DES
+//应用程序入口
 int main(int argc, char **argv)
 {
 
-    if(argc < 5)
-    {
-        usage();
-        return 1;
-    }
+	if (argc < 5)
+	{
+		usage();
+		return 1;
+	}
 
-    string enc_dec = argv[1];
-    if(enc_dec != "-e" && enc_dec != "-d")
-    {
-        usage();
-        return 2;
-    }
+	string enc_dec = argv[1];
+	if (enc_dec != "-e" && enc_dec != "-d")
+	{
+		usage();
+		return 2;
+	}
 
-    string key = argv[2];
-    if(key.size() != 8)
-    {
-        usage();
-        return 2;
-    }
+	string key = argv[2];
+	if (key.size() != 8)
+	{
+		usage();
+		return 2;
+	}
 
-    string input,output;
-    if(argc > 3)
-        input  = argv[3];
-    if(argc > 4)
-        output = argv[4];
+	string input, output;
+	if (argc > 3)
+		input = argv[3];
+	if (argc > 4)
+		output = argv[4];
 
-    if(argc > 5)
-    {
-        string s = argv[5];
-        if(s == "-s")
-            s_showMessage = false;
-    }
+	if (argc > 5)
+	{
+		string s = argv[5];
+		if (s == "-s")
+			s_showMessage = false;
+	}
 
 
-    assert(sizeof(uint64_t) == 8);
+	assert(sizeof(uint64_t) == 8);
 
-//    string key = "8654321";
-//    string enc_dec = "-e";
-//    string input = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z";
-//    string output = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des";
-//    string enc_dec = "-d";
-//    string input = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des";
-//    string output = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des.7z";
+	//    string key = "8654321";
+	//    string enc_dec = "-e";
+	//    string input = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z";
+	//    string output = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des";
+	//    string enc_dec = "-d";
+	//    string input = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des";
+	//    string output = "E:\\MyGitRepo\\myDES\\pgAdmin3.7z.des.7z";
 
-    if(enc_dec == "-e")
-        return encrypt_decrypt(key, input, output, 0);
-    if(enc_dec == "-d")
-        return encrypt_decrypt(key, input, output, 1);
+	if (enc_dec == "-e")
+		return encrypt_decrypt(key, input, output, 0);
+	if (enc_dec == "-d")
+		return encrypt_decrypt(key, input, output, 1);
 
-    return 0;
+	return 0;
 }
+
+#else
+/*!  \brief 动态库导出
+	*
+	*  此函数用于动态库导出，实现DES加密和解密
+	*
+	*  \param[in] key DES密码，必须是8个字节长度
+	*  \param[in] inputFile 输入文件全名
+	*  \param[in] outputFile 输出文件全名
+	*  \param[in] isEncryption 是加密还是解密。true加密，false解密
+	*  \param[in] isVerbose 是否显示输入。在控制台显示加密、解密信息、进度条等信息。全局开关，该参数线程不安全！！！
+	*  \return 错误代码：\n 0:正常退出\n 1:文件名输入错误\n 2:key长度不是8字节\n -1:文件无法打开\n -2:要解密的文件不是要求的类型
+	*/
+extern "C" __declspec(dllexport) int __stdcall yn_encrypt_decrypt(const char *key, const char *inputFile, const char *outputFile, unsigned int isEncryption, unsigned int  isVerbose)
+{
+	string key_str = key;
+	if (key_str.size() != 8)
+		return 2;
+
+	string inputFile_str = inputFile;
+	string outputFile_str = outputFile;
+
+	if (inputFile_str.length() < 1 || outputFile_str.length() < 1)
+		return 1;
+
+	if (isVerbose != 0)
+		s_showMessage = true;
+	else
+		s_showMessage = false;
+
+	if (isEncryption != 0)
+		return encrypt_decrypt(key_str, inputFile_str, outputFile_str, 0);
+	else
+		return encrypt_decrypt(key_str, inputFile_str, outputFile_str, 1);
+
+	return 0;
+}
+
+#endif // !EXPORT_DES
